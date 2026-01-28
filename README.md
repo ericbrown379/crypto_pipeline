@@ -1,8 +1,13 @@
 # Crypto Pipeline (ETL + Trust Dashboard)
 
-A simple end‑to‑end ETL pipeline that ingests crypto market data (CoinGecko + Kraken),
-cleans and standardizes it, loads it into Postgres, and serves an action‑oriented
-Streamlit dashboard.
+A full end‑to‑end ETL system that ingests crypto market data from multiple APIs,
+cleans and standardizes it into analytics‑ready candles, loads it into Postgres,
+and serves an executive‑ready Streamlit dashboard for data trust and market signals.
+
+Live dashboard:
+```
+https://cryptopipeline-gdmgxcnjmzqw48hfqwpck8.streamlit.app/
+```
 
 ## What it does
 - **Extract:** Pulls raw data from two sources with basic resiliency.
