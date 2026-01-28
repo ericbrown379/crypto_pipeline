@@ -72,10 +72,12 @@ def _load_from_db(db_url: str, days: int) -> pd.DataFrame:
     query = text(
         """
         SELECT
-            source, asset, interval_min, ts_start, open, high, low, close,
+            source, asset, interval_min,
+            ts_start::timestamptz AS ts_start,
+            open, high, low, close,
             vwap, volume, count, is_missing, bad_candle, spike_flag, anomaly_flag
         FROM fact_price_candle
-        WHERE ts_start >= (NOW() - (:days * INTERVAL '1 day'))
+        WHERE ts_start::timestamptz >= (NOW() - (:days * INTERVAL '1 day'))
         ORDER BY ts_start ASC
         """
     )

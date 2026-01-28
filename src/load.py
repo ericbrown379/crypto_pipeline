@@ -2,6 +2,7 @@ import os
 import sys
 import pandas as pd
 from sqlalchemy import create_engine
+from sqlalchemy.types import Boolean, DateTime, Float, Integer, String
 from config import Config
 from utils import setup_logger, clean_column_names
 
@@ -31,22 +32,6 @@ def create_db_engine():
         logger.error(f"Error creating database engine: {e}")
         sys.exit(1)
 
-def load_data_to_postegresql(df, table_name: str):
-    """Load DataFrame into PostgreSQL database table.
-
-    Args:
-        df (pd.DataFrame): DataFrame to load.
-        table_name (str): Target table name in the database.
-    """
-    engine = create_db_engine()
-
-    try:
-        df.to_sql(table_name, engine, if_exists="replace", index=False)
-        logger.info(f"Data loaded into table '{table_name}' successfully.")
-    except Exception as e:
-        logger.error(f"Error loading data into table '{table_name}': {e}")
-        sys.exit(1)
-
 def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
     """Clean DataFrame column names by stripping spaces and converting to lowercase.
 
@@ -63,7 +48,44 @@ def clean_columns(df: pd.DataFrame) -> pd.DataFrame:
 def load_transformed_csv(csv_path: str, table_name: str = DEFAULT_TABLE) -> None:
     df = pd.read_csv(csv_path)
     df = clean_column_names(df)
-    load_data_to_postegresql(df, table_name)
+    if "ts_start" in df.columns:
+        df["ts_start"] = pd.to_datetime(df["ts_start"], utc=True, errors="coerce")
+    dtype_map = {
+        "source": String(),
+        "asset": String(),
+        "interval_min": Integer(),
+        "ts_start": DateTime(timezone=True),
+        "open": Float(),
+        "high": Float(),
+        "low": Float(),
+        "close": Float(),
+        "vwap": Float(),
+        "volume": Float(),
+        "count": Float(),
+        "is_missing": Boolean(),
+        "bad_candle": Boolean(),
+        "spike_flag": Boolean(),
+        "anomaly_flag": Boolean(),
+    }
+    load_data_to_postegresql(df, table_name, dtype_map)
+
+
+def load_data_to_postegresql(df, table_name: str, dtype_map: dict | None = None):
+    """Load DataFrame into PostgreSQL database table.
+
+    Args:
+        df (pd.DataFrame): DataFrame to load.
+        table_name (str): Target table name in the database.
+        dtype_map (dict | None): Optional SQLAlchemy dtype overrides.
+    """
+    engine = create_db_engine()
+
+    try:
+        df.to_sql(table_name, engine, if_exists="replace", index=False, dtype=dtype_map)
+        logger.info(f"Data loaded into table '{table_name}' successfully.")
+    except Exception as e:
+        logger.error(f"Error loading data into table '{table_name}': {e}")
+        sys.exit(1)
 
 
 def main() -> None:
