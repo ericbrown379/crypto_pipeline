@@ -34,6 +34,7 @@ st.markdown(
         margin: 0;
         font-size: 28px;
         letter-spacing: 0.02em;
+        color: #f8fafc;
     }
     .hero p {
         margin: 6px 0 0 0;
@@ -104,6 +105,33 @@ st.markdown(
     }
     .action-card.alert { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
     .action-card.critical { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+    h1, h2, h3, h4 {
+        color: #0f172a;
+    }
+    .block-container {
+        padding-top: 1.4rem;
+        padding-bottom: 2.2rem;
+    }
+    @media (max-width: 768px) {
+        .hero {
+            padding: 12px;
+        }
+        .hero h1 {
+            font-size: 22px;
+        }
+        .kpi-card {
+            border-radius: 12px;
+        }
+        .kpi-value {
+            font-size: 22px;
+        }
+        .action-card {
+            min-height: auto;
+        }
+        .block-container {
+            padding-top: 0.8rem;
+        }
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -221,6 +249,13 @@ with hero_right:
         """,
         unsafe_allow_html=True,
     )
+
+st.header("What it does")
+st.write(
+    "This app pulls crypto OHLCV data from CoinGecko and Kraken, cleans and "
+    "standardizes it into fixed‑interval candles, flags anomalies, and surfaces "
+    "data quality and market signals you can act on."
+)
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
