@@ -1,0 +1,37 @@
+name: etl-cron
+
+on:
+  schedule:
+    - cron: "0 * * * *" # hourly
+  workflow_dispatch:
+
+jobs:
+  run-etl:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      COINGECKO_API_KEY: ${{ secrets.COINGECKO_API_KEY }}
+      KRAKEN_API_KEY: ${{ secrets.KRAKEN_API_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Extract
+        run: python extract.py
+        working-directory: src
+
+      - name: Transform
+        run: python transform.py
+        working-directory: src
+
+      - name: Load
+        run: python load.py
+        working-directory: src
