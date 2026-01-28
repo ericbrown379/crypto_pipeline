@@ -6,7 +6,7 @@ and serves an executive‑ready Streamlit dashboard for data trust and market si
 
 Live dashboard:
 ```
-https://cryptopipeline-gdmgxcnjmzqw48hfqwpck8.streamlit.app/
+[https://cryptopipeline-gdmgxcnjmzqw48hfqwpck8.streamlit.app/](https://cryptopipeline-gdmgxcnjmzqw48hfqwpck8.streamlit.app/)
 ```
 
 ## What it does
