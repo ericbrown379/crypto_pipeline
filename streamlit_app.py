@@ -118,7 +118,7 @@ data: pd.DataFrame
 if db_url:
     data = _load_from_db(db_url, days)
 else:
-data = _load_from_csv(os.path.join("src", "transformed_crypto_data.csv"))
+    data = _load_from_csv(os.path.join("src", "transformed_crypto_data.csv"))
 
 if data.empty:
     st.warning("No data found for the selected window.")
